@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="82572869-1bb4-4284-b9ab-7f98f14d850b">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="cedula" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select  p.persona_nombre ||' '||p.persona_apellido,
+                    (CASE
+                    WHEN  e.enc_tipo =1 THEN 'Formulario de Riesgo (EPV-R)'
+                    WHEN  e.enc_tipo =2 THEN 'Escala evaluación de riesgos de violencia'
+                     WHEN  e.enc_tipo =3 THEN 'Escala evaluación de nivel de crisis de riesgo'
+                    END) AS "Tipo de Encuesta" ,
+                    e.total 
+                    from persona p
+                    join victima v
+                   on v.persona_codigo=p.persona_codigo
+                    join escala_prevencion_riesgos epr
+                    on epr.victima_codigo=v.victima_codigo
+                    join encuesta e
+                    on e.epr_codigo=epr.epr_codigo
+                    where persona_cedula=$P{cedula}]]>
+	</queryString>
+	<field name="?column?" class="java.lang.String"/>
+	<field name="Tipo de Encuesta" class="java.lang.String"/>
+	<field name="total" class="java.lang.Integer"/>
+	<variable name="?column?_1" class="java.lang.Integer" resetType="Page" calculation="DistinctCount">
+		<variableExpression><![CDATA[$F{?column?}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="62" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="21" width="555" height="29" uuid="c4e44d8a-f3d3-4426-ac53-da76a3e169bd"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="16" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Reporte de los resultados de las encuentas realizadas]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="56" splitType="Stretch">
+			<staticText>
+				<reportElement x="10" y="11" width="82" height="21" uuid="32750766-b7e9-4bc4-9b2d-eacce7a1d047"/>
+				<text><![CDATA[Beneficiaria:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="107" y="11" width="250" height="20" uuid="ddaff191-206b-4746-a810-f57230703327"/>
+				<textFieldExpression><![CDATA[$F{?column?}]]></textFieldExpression>
+			</textField>
+			<textField pattern="EEEEE dd MMMMM yyyy">
+				<reportElement x="376" y="36" width="179" height="20" uuid="85e6df5b-62db-4706-ba70-b5c28b932be0"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="33" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="2" width="287" height="20" uuid="a5ea451b-8394-460b-ae94-e2086c464046"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Tipo de Encuesta]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="455" y="2" width="100" height="20" uuid="308b5367-6046-4f52-8e5a-c4a94b6f9b79"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[total]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="60" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="287" height="20" uuid="23ef4223-2775-4f5f-bc61-a4bc4e01aee6"/>
+				<textFieldExpression><![CDATA[$F{Tipo de Encuesta}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="455" y="0" width="100" height="20" uuid="e8be3a3b-9fe8-40cd-a1ae-d6ec1feec5cc"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{total}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="51" width="555" height="1" uuid="1ad9aa08-8ace-4a99-ba41-25e30ad10578"/>
+			</line>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>
